@@ -6,7 +6,7 @@
    	</div>
    	<!-- E 歌曲封面 -->
 
-   	<div class="song-info"  @click.self="showPlayView()">
+   	<div class="song-info"  @click="showPlayView()">
    		<h3 v-text="getSongList[getCurSongIndex].songname"></h3>
    		<span v-text="getSongList[getCurSongIndex].singer[0].name"></span>
    	</div>
@@ -29,12 +29,15 @@
 <script>
 import {mapGetters,mapMutations} from 'vuex';
 import jsonp from "jsonp";
+import axios from 'axios';
 import api from "@/api/singerApi";
 import playIcon from '../assets/icon/play.png';
 import pauseIcon from '../assets/icon/pause.png';
 
 //引入歌曲播放列表
 import SongList from '@/components/SongList';
+
+
 export default {
   name: '',
   data(){
@@ -62,6 +65,12 @@ export default {
       }else{//暂停
         this.thumb.style.animationPlayState = 'paused';
       }
+    },
+    getCurSongSrc:function(){
+      // axios({
+      //   url:'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?callback=MusicJsonCallback_lrc&pcachetime=1525256857129&songmid=001J5QJL1pRQYB&g_tk=5381&jsonpCallback=MusicJsonCallback_lrc&loginUin=0&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0',
+      //   type:'get'
+      // });
     }
   },
   methods:{
@@ -108,7 +117,6 @@ export default {
       }
     },
     showPlayView(){//点击miniplayer底部显示播放界面
-      console.log(this.getSongList[this.getCurSongIndex]);
       this.$router.push({path:'/song/'+this.getSongList[this.getCurSongIndex].songmid+'/'+this.getSongList[this.getCurSongIndex].albummid});
     },
     ...mapMutations({
@@ -136,9 +144,7 @@ export default {
   box-sizing: border-box;
   
   .thumb{
-    &.playing{
       animation:playCicle 5s linear infinite;
-    }
   	img{
   		width:45px;
   		height:45px;

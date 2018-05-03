@@ -45,6 +45,7 @@ import api from '@/api/searchApi'
 import BScroll from 'better-scroll'
 import {mapMutations} from 'vuex'
 
+
 export default {
   name: '',
   data(){
@@ -58,23 +59,47 @@ export default {
     }
   },
   watch:{
-    keywords:function(cur,old){
-      if(!cur){
-        this.searchResultState = false;
-        return;
-      }
-      var url = api.searchApi + encodeURI(cur);
-      jsonp(url,{param:'jsonpCallback'},(err,data)=>{
-        this.songList = data.data; 
-        this.$nextTick(function(){
-          this.scroll = new BScroll('.song-wrapper',{
-            click:true,
-            scrollbar:false
-          });
-        });
+    // keywords:function(cur,old){
+    //   if(!cur){
+    //     this.searchResultState = false;
+    //     return;
+    //   }
+    //   var url = api.searchApi + encodeURI(cur);
+    //   jsonp(url,{param:'jsonpCallback'},(err,data)=>{
+    //     this.songList = data.data; 
+    //     this.$nextTick(function(){
+    //       this.scroll = new BScroll('.song-wrapper',{
+    //         click:true,
+    //         scrollbar:false
+    //       });
+    //     });
 
-        this.searchResultState = true;
-      });
+    //     this.searchResultState = true;
+    //   });
+    // }
+    keywords:function(cur,old){
+      let timmer;
+      if(timmer){
+        clearTimeout(timmer);
+      }
+      setTimeout(()=>{
+        if(!cur){
+          this.searchResultState = false;
+          return;
+        }
+        var url = api.searchApi + encodeURI(cur);
+        jsonp(url,{param:'jsonpCallback'},(err,data)=>{
+          this.songList = data.data; 
+          this.$nextTick(function(){
+            this.scroll = new BScroll('.song-wrapper',{
+              click:true,
+              scrollbar:false
+            });
+          });
+
+          this.searchResultState = true;
+        });
+      },200);
     }
   },
   created(){

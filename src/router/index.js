@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index from '@/pages/Index'
+
+const Index = () => import('@/pages/Index.vue');
+// import Index from '@/pages/Index'
 import Singer from '@/pages/Singer'
 import SingerDetail from '@/pages/SingerDetail'
 import SongPlay from '@/pages/SongPlay'

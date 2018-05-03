@@ -73,8 +73,12 @@ export default {
 
       vm.playClass = 'playing';
       vm.setPlayState(true);
-      let player = document.querySelector("#player");
-      player.play();
+
+      vm.$nextTick(()=>{
+        let player = document.querySelector("#player");
+        player.play();
+      });
+      
   	});
   },
   methods:{

@@ -24,14 +24,17 @@
           <h2>歌曲排行榜</h2>
           <div class="songs-container">
             <ul>
-              <li v-for="(item,k) in topList" :key="k">
+            <router-link v-for="(item,k) in topList" :key="k" @click.native="setCurInfo(item.data.songname,item.data.singer[0].name,item.data)" :to="'/song/' + item.data.songmid + '/' + item.data.albummid" tag="div">
+              <li>
                 <div class="thumb"><img v-lazy="'https://y.gtimg.cn/music/photo_new/T002R90x90M000'+item.data.albummid+'.jpg?max_age=2592000'" alt=""></div>
                 <div class="text-info">
                   <span class="song-name">{{item.data.songname}}</span>
                   <span class="singer-name">{{item.data.singer[0].name}}</span>
                 </div>
                 <!-- <div class="play-time" v-text="getTime(item.data.interval)"></div> -->
+               
               </li>
+              </router-link>
             </ul>
           </div>
         </div>
@@ -57,7 +60,7 @@ import "swiper/dist/css/swiper.min.css";
 
 // 导入接口地址
 import api from '@/api/indexApi'
-
+import {mapGetters,mapMutations} from 'vuex'
 export default {
   name: '',
   data(){
@@ -67,6 +70,11 @@ export default {
       topList:{},
       loadingState:true
     }
+  },
+  computed:{
+    ...mapGetters([
+      'getSongList'
+    ])
   },
   created:function(){
     let vm = this;
@@ -92,13 +100,13 @@ export default {
     //toplist歌曲排行榜数据获取
     jsonp(api.topListApi,{param:'jsonpCallback'},function(err,data){
       vm.topList = data.songlist;
-
       //数据加载完成隐藏loading
       vm.loadingState = false;
     });
 
     vm.$nextTick(function(){
       this.scroll = new BScroll('.index-wrapper',{
+        click:true,
         scrollbar:false,
         pullUpLoad: {
           threshold: -20 // 在上拉到超过底部 20px 时，触发 pullingUp 事件
@@ -136,7 +144,22 @@ export default {
       });
 
      
-    }
+    },
+    setCurInfo:function(song,singer,songData,index){
+      this.setCurSong(song);
+      this.setCurSinger(singer);
+
+      //添加歌曲到播放列表
+      this.setSongList(songData);
+      //设置当前歌曲索引
+      this.setCurSongIndex(this.getSongList.length-1);
+    },
+    ...mapMutations({
+      'setCurSong':'SET_CUR_SONG',
+      'setCurSinger':'SET_CUR_SINGER',
+      'setCurSongIndex':'SET_CUR_SONG_INDEX',
+      'setSongList':'SET_SONG_LIST',
+    })
   },
   components:{
     Header,

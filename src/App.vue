@@ -9,7 +9,7 @@
       
     
       <!-- S miniPlayer 迷你播放器 -->
-      <MiniPlayer></MiniPlayer>
+      <MiniPlayer v-if="getSongList.length > 0"></MiniPlayer>
       <!-- E miniPlayer 迷你播放器 -->
  
   </div>
@@ -17,8 +17,14 @@
 
 <script>
 import MiniPlayer from '@/components/MiniPlayer';
+import {mapGetters} from 'vuex';
 export default {
   name: 'App',
+  computed:{
+    ...mapGetters([
+      'getSongList'
+    ])
+  },
   components:{
     MiniPlayer
   }

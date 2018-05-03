@@ -30,7 +30,6 @@
 				   	</div>
 				</keep-alive>
 		   	</div>
-		   	
 		
 	  </div>
   </transition>
@@ -54,7 +53,8 @@ export default {
   	...mapGetters([
   		'getCurSong',
   		'getCurSinger',
-  		'getSongList'
+  		'getSongList',
+  		'getPlayState'
   	])
   },
   created:function(){
@@ -64,15 +64,21 @@ export default {
 
   	jsonp(singerApi,{param:'jsonpCallback'},function(err,data){
   		vm.singer = data.data;
-  		console.log(vm.singer);
   		vm.loadState = true;
   		vm.$nextTick(function(){
 	      scroll = new BScroll('.singerdetail-wrapper',{
-	        click:true,
-	        scrollbar:false
+	        click:true
 	      });
 	    });
   	});
+  },
+  mounted(){
+  	if(this.getPlayState){
+  		let wrapperNode = document.querySelector('.singerdetail-wrapper');
+		wrapperNode.style.height = '280px';
+		wrapperNode.style.bottom = '60px';
+  	}
+	
   },
   methods:{
     back:function(){ 
